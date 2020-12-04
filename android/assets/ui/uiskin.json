@@ -1,0 +1,48 @@
+{
+    com.badlogic.gdx.graphics.Color : {
+        white : { r : 1, g : 1, b : 1, a : 1 },
+        black : { r : 0, g : 0, b : 0, a : 1 },
+    },
+
+    com.badlogic.gdx.graphics.g2d.BitmapFont : {
+        fontSmall : { file : font-small.fnt },
+        fontBig : { file : font-big.fnt }
+    },
+
+    com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle : {
+        default : {
+            up : button,
+            down : button-down,
+            over : button-down,
+            font : fontBig,
+            fontColor : white
+        },
+
+        inWindow : {
+            up : button-down,
+            down : button,
+            over : button,
+            font : fontSmall,
+            fontColor : white
+        }
+    },
+
+    com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle : {
+        default : {
+            up : button,
+            down : button-down,
+            over : button-down
+        }
+    },
+
+    com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle : {
+        default : { font : fontSmall, fontColor : black },
+        big : { font : fontBig, fontColor: black }
+    },
+
+    com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle : {
+        default : { titleFont : fontBig, background : window }
+    }
+
+
+}
