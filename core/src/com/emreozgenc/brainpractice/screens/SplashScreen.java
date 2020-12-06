@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.emreozgenc.brainpractice.BrainPractice;
+import com.emreozgenc.brainpractice.managers.Assets;
 
 public class SplashScreen implements Screen {
 
@@ -20,11 +21,12 @@ public class SplashScreen implements Screen {
     private BrainPractice game;
     private Stage stage;
     private Image logo;
+    private Texture logoTexture;
 
     public SplashScreen(BrainPractice game) {
         this.game = game;
         stage = new Stage(new FitViewport(BrainPractice.V_WIDTH, BrainPractice.V_HEIGHT));
-        Texture logoTexture = new Texture(Gdx.files.internal("logo.png"));
+        logoTexture = Assets.manager.get(Assets.logo, Texture.class);
         logoTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         logo = new Image(logoTexture);
         logo.setColor(1, 1, 1, 0);
@@ -42,6 +44,7 @@ public class SplashScreen implements Screen {
                 new Action() {
                     @Override
                     public boolean act(float delta) {
+                        dispose();
                         game.setScreen(new MenuScreen(game));
                         return true;
                     }
@@ -82,5 +85,6 @@ public class SplashScreen implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
+        logoTexture.dispose();
     }
 }

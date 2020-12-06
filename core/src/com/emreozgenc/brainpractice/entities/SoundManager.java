@@ -2,6 +2,7 @@ package com.emreozgenc.brainpractice.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
+import com.emreozgenc.brainpractice.managers.Assets;
 
 public class SoundManager {
 
@@ -11,9 +12,8 @@ public class SoundManager {
 
     public SoundManager() {
         soundManager = this;
-        selectSound = Gdx.audio.newSound(Gdx.files.internal("sounds/select.ogg"));
-        successSound = Gdx.audio.newSound(Gdx.files.internal("sounds/success.ogg"));
-
+        selectSound = Assets.manager.get(Assets.selectSound);
+        successSound = Assets.manager.get(Assets.successSound);
     }
 
     public void playSelectSound() {

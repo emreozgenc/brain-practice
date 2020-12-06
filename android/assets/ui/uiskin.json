@@ -4,11 +4,6 @@
         black : { r : 0, g : 0, b : 0, a : 1 },
     },
 
-    com.badlogic.gdx.graphics.g2d.BitmapFont : {
-        fontSmall : { file : font-small.fnt },
-        fontBig : { file : font-big.fnt }
-    },
-
     com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle : {
         default : {
             up : button,
@@ -42,7 +37,7 @@
 
     com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle : {
         default : { titleFont : fontBig, background : window }
-    }
+    },
 
 
 }

@@ -1,11 +1,18 @@
 package com.emreozgenc.brainpractice.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -15,6 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.emreozgenc.brainpractice.BrainPractice;
+import com.emreozgenc.brainpractice.managers.Assets;
 
 public class MenuScreen implements Screen {
 
@@ -34,27 +42,57 @@ public class MenuScreen implements Screen {
         final int width = Gdx.graphics.getWidth();
         final int height = Gdx.graphics.getHeight();
 
-        final TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("ui/uiskin.atlas"));
-        final Skin skin = new Skin(Gdx.files.internal("ui/uiskin.json"), atlas);
-        skin.getFont("fontBig").getData().setScale(scale);
-        skin.getFont("fontSmall").getData().setScale(scale);
+        final TextureAtlas atlas = Assets.manager.get(Assets.uiskinAtlas);
+        final Skin skin = new Skin();
+
+        BitmapFont fontBig = Assets.manager.get("fontBig.ttf");
+        BitmapFont fontSmall = Assets.manager.get("fontSmall.ttf");
+
+        skin.add("fontBig", fontBig, BitmapFont.class);
+        skin.add("fontSmall", fontSmall, BitmapFont.class);
+        skin.addRegions(atlas);
+        skin.load(Gdx.files.internal("ui/uiskin.json"));
 
         final Table table = new Table();
         table.setFillParent(true);
         table.defaults().pad(20f);
 
-        final TextButton startButton = new TextButton("Start Game", skin);
-        final TextButton exitButton = new TextButton("Exit", skin);
+        final TextButton startButton = new TextButton("START THE GAME", skin);
+        final TextButton scoreButton = new TextButton("TIME RECORDS", skin);
+        final TextButton exitButton = new TextButton("CLOSE THE GAME", skin);
         final Label titleLabel = new Label("BRAIN PRACTICE v0.0.1", skin, "big");
-        final Label scoreLabel = new Label("Time Record : " + 10, skin, "big");
+        final Label scoreLabel = new Label("", skin, "big");
+
+        Preferences preferences = Gdx.app.getPreferences("TimeRecord");
+
+        float timeRecord = preferences.getFloat("4x4-Time");
+        String str = String.format("Best Time : %.1f seconds", timeRecord);
+        scoreLabel.setText(str);
 
         table.add(titleLabel).padBottom(height*.1f);
         table.row();
-        table.add(startButton).width(width*.8f);
+        table.add(startButton).width(width*.8f).height(width*.16f);
         table.row();
-        table.add(exitButton).width(width*.8f);
+        table.add(scoreButton).width(width*.8f).height(width*.16f);
+        table.row();
+        table.add(exitButton).width(width*.8f).height(width*.16f);
         table.row();
         table.add(scoreLabel).padTop(height*.1f);
+
+        final Window window = new Window("", skin);
+        window.setWidth(width*.9f);
+        window.setHeight(width*.9f);
+        window.setMovable(false);
+        window.setPosition(width/2f, height/2f, Align.center);
+        window.setLayoutEnabled(false);
+        window.setColor(1, 1, 1, 0);
+        window.setVisible(false);
+
+        final TextButton closeWindow = new TextButton("CLOSE WINDOW", skin, "inWindow");
+        closeWindow.setSize(window.getWidth()*.9f, window.getWidth()*.16f);
+        closeWindow.setPosition(window.getWidth()/2f, 20f * scale, Align.bottom);
+
+        window.add(closeWindow);
 
 
 
@@ -73,8 +111,34 @@ public class MenuScreen implements Screen {
             }
         });
 
+        scoreButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                window.setVisible(true);
+                window.addAction(Actions.fadeIn(.5f));
+            }
+        });
+
+        closeWindow.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                window.addAction(new SequenceAction(
+                        Actions.fadeOut(.5f),
+                        new Action() {
+                            @Override
+                            public boolean act(float delta) {
+                                window.setVisible(false);
+                                return true;
+                            }
+                        }
+                ));
+            }
+        });
+
+
 
         stage.addActor(table);
+        stage.addActor(window);
 
     }
 
@@ -94,7 +158,8 @@ public class MenuScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-
+        stage.getViewport().update(width, height);
+        stage.getViewport().apply();
     }
 
     @Override

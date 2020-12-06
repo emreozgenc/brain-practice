@@ -4,7 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -16,12 +18,13 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.emreozgenc.brainpractice.BrainPractice;
 import com.emreozgenc.brainpractice.entities.Board;
+import com.emreozgenc.brainpractice.managers.Assets;
 
 public class PlayScreen implements Screen {
 
     private BrainPractice game;
     private Board board;
-    private Stage stage;
+    public static Stage stage;
     public Label timeLabel;
 
     public PlayScreen(BrainPractice game) {
@@ -38,27 +41,38 @@ public class PlayScreen implements Screen {
 
     private void initUI() {
         final float scale = Gdx.graphics.getWidth() / 1080f;
+        final float width = Gdx.graphics.getWidth();
+        final float height = Gdx.graphics.getHeight();
         final TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("ui/uiskin.atlas"));
-        final Skin skin = new Skin(Gdx.files.internal("ui/uiskin.json"), atlas);
-        skin.getFont("fontBig").getData().setScale(scale);
-        skin.getFont("fontSmall").getData().setScale(scale);
+        final Skin skin = new Skin();
+
+
+        final BitmapFont fontBig = Assets.manager.get("fontBig.ttf");
+        final BitmapFont fontSmall = Assets.manager.get("fontSmall.ttf");
+
+        skin.add("fontBig", fontBig, BitmapFont.class);
+        skin.add("fontSmall", fontSmall, BitmapFont.class);
+        skin.addRegions(atlas);
+        skin.load(Gdx.files.internal("ui/uiskin.json"));
+
 
         final Table table = new Table();
         table.setFillParent(true);
         table.align(Align.top | Align.center);
 
         timeLabel = new Label("Time : 0s", skin, "big");
-        final TextButton returnButton = new TextButton("Return Menu", skin);
+        final TextButton returnButton = new TextButton("RETURN MENU", skin);
 
         table.add(timeLabel).padTop(50f);
         table.row();
-        table.add(returnButton);
+        table.add(returnButton).expandX().width(width*.8f);
 
 
         returnButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new MenuScreen(game));
+                dispose();
             }
         });
 
@@ -108,5 +122,6 @@ public class PlayScreen implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
+        board.dispose();
     }
 }

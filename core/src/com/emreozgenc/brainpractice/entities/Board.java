@@ -5,6 +5,7 @@ import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Array;
@@ -12,6 +13,7 @@ import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.emreozgenc.brainpractice.BrainPractice;
+import com.emreozgenc.brainpractice.managers.Assets;
 import com.emreozgenc.brainpractice.screens.MenuScreen;
 import com.emreozgenc.brainpractice.screens.PlayScreen;
 
@@ -48,7 +50,7 @@ public class Board {
         cardSize = (BrainPractice.V_WIDTH - 2 * MARGIN_LEFT) / width;
         selectedCards = new Array<>();
         count = width * height;
-        atlas = new TextureAtlas(Gdx.files.internal("cards.atlas"));
+        atlas = Assets.manager.get(Assets.cardsAtlas);
 
         initCards();
     }
@@ -95,7 +97,7 @@ public class Board {
             }
         }
         final BrainPractice game = (BrainPractice) Gdx.app.getApplicationListener();
-
+        setRecord();
         isFinished = true;
         Timer.schedule(new Timer.Task() {
             @Override
@@ -106,9 +108,29 @@ public class Board {
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
+                PlayScreen.stage.dispose();
+                dispose();
                 game.setScreen(new MenuScreen(game));
             }
         }, DELAY);
+    }
+
+    private void setRecord() {
+        Preferences preferences = Gdx.app.getPreferences("TimeRecord");
+        float currentTime = time;
+
+        if(!preferences.contains(height + "x" + width + "-Time")) {
+            preferences.putFloat(height + "x" + width + "-Time", currentTime);
+            preferences.flush();
+            return;
+        }
+
+        float oldTime = preferences.getFloat(height + "x" + width + "-Time");
+
+        if (currentTime < oldTime) {
+            preferences.putFloat(height + "x" + width + "-Time", currentTime);
+            preferences.flush();
+        }
     }
 
     private void initCards() {
@@ -160,5 +182,9 @@ public class Board {
                 stage.addActor(cards[i][j]);
             }
         }
+    }
+
+    public void dispose() {
+        stage.dispose();
     }
 }
