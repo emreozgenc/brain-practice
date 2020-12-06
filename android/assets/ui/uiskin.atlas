@@ -1,10 +1,18 @@
 
 uiskin.png
-size: 512,128
+size: 1024,128
 format: RGBA8888
-filter: Nearest,Nearest
+filter: Linear,Linear
 repeat: none
-button
+button-blue
+  rotate: false
+  xy: 402, 2
+  size: 98, 98
+  split: 42, 42, 42, 42
+  orig: 98, 98
+  offset: 0, 0
+  index: -1
+button-green
   rotate: false
   xy: 102, 2
   size: 98, 98
@@ -12,7 +20,15 @@ button
   orig: 98, 98
   offset: 0, 0
   index: -1
-button-down
+button-orange
+  rotate: false
+  xy: 302, 2
+  size: 98, 98
+  split: 42, 42, 42, 42
+  orig: 98, 98
+  offset: 0, 0
+  index: -1
+button-purple
   rotate: false
   xy: 2, 2
   size: 98, 98
@@ -20,9 +36,25 @@ button-down
   orig: 98, 98
   offset: 0, 0
   index: -1
-window
+button-red
+  rotate: false
+  xy: 502, 2
+  size: 98, 98
+  split: 42, 42, 42, 42
+  orig: 98, 98
+  offset: 0, 0
+  index: -1
+button-yellow
   rotate: false
   xy: 202, 2
+  size: 98, 98
+  split: 42, 42, 42, 42
+  orig: 98, 98
+  offset: 0, 0
+  index: -1
+window
+  rotate: false
+  xy: 602, 2
   size: 98, 98
   split: 9, 10, 68, 9
   orig: 98, 98

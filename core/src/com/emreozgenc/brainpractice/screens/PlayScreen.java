@@ -43,15 +43,16 @@ public class PlayScreen implements Screen {
         final float scale = Gdx.graphics.getWidth() / 1080f;
         final float width = Gdx.graphics.getWidth();
         final float height = Gdx.graphics.getHeight();
-        final TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("ui/uiskin.atlas"));
+        final TextureAtlas atlas = Assets.manager.get(Assets.uiskinAtlas);
         final Skin skin = new Skin();
 
+        BitmapFont chewy_96_border = Assets.manager.get("chewy-96-border.ttf");
+        BitmapFont chewy_64_border = Assets.manager.get("chewy-64-border.ttf");
+        BitmapFont chewy_48_border = Assets.manager.get("chewy-48-border.ttf");
 
-        final BitmapFont fontBig = Assets.manager.get("fontBig.ttf");
-        final BitmapFont fontSmall = Assets.manager.get("fontSmall.ttf");
-
-        skin.add("fontBig", fontBig, BitmapFont.class);
-        skin.add("fontSmall", fontSmall, BitmapFont.class);
+        skin.add("chewy-96-border", chewy_96_border, BitmapFont.class);
+        skin.add("chewy-64-border", chewy_64_border, BitmapFont.class);
+        skin.add("chewy-48-border", chewy_48_border, BitmapFont.class);
         skin.addRegions(atlas);
         skin.load(Gdx.files.internal("ui/uiskin.json"));
 
@@ -60,12 +61,12 @@ public class PlayScreen implements Screen {
         table.setFillParent(true);
         table.align(Align.top | Align.center);
 
-        timeLabel = new Label("Time : 0s", skin, "big");
-        final TextButton returnButton = new TextButton("RETURN MENU", skin);
+        timeLabel = new Label("Time : 0s", skin, "title-border");
+        final TextButton returnButton = new TextButton("RETURN MENU", skin, "btn-red-sm");
 
-        table.add(timeLabel).padTop(50f);
+        table.add(timeLabel).padTop(50f * scale);
         table.row();
-        table.add(returnButton).expandX().width(width*.8f);
+        table.add(returnButton).expandX().width(width*.8f).height(width*.08f);
 
 
         returnButton.addListener(new ClickListener() {

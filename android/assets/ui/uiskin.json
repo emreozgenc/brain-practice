@@ -5,38 +5,80 @@
     },
 
     com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle : {
-        default : {
-            up : button,
-            down : button-down,
-            over : button-down,
-            font : fontBig,
+        btn-red-rg : {
+            up : button-red,
+            down : button-green,
+            font : chewy-96-border,
             fontColor : white
         },
-
-        inWindow : {
-            up : button-down,
-            down : button,
-            over : button,
-            font : fontSmall,
+        btn-orange-rg : {
+            up : button-orange,
+            down : button-blue,
+            font : chewy-96-border,
+            fontColor : white
+        },
+        btn-green-rg : {
+            up : button-green,
+            down : button-red,
+            font : chewy-96-border,
+            fontColor : white
+        },
+        btn-purple-rg : {
+          up : button-purple,
+          down : button-yellow,
+          font : chewy-96-border,
+          fontColor : white
+        },
+        btn-red-sm : {
+            up : button-red,
+            down : button-green,
+            font : chewy-64-border,
+            fontColor : white
+        },
+        btn-orange-sm : {
+            up : button-orange,
+            down : button-blue,
+            font : chewy-64-border,
+            fontColor : white
+        },
+        btn-green-sm : {
+            up : button-green,
+            down : button-red,
+            font : chewy-64-border,
+            fontColor : white
+        },
+        btn-purple-sm : {
+            up : button-purple,
+            down : button-yellow,
+            font : chewy-64-border,
             fontColor : white
         }
     },
 
     com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle : {
-        default : {
-            up : button,
-            down : button-down,
-            over : button-down
+        btn-red-rg : {
+            up : button-red,
+            down : button-green
+        },
+        btn-orange-rg : {
+            up : button-orange,
+            down : button-blue
+        },
+        btn-green-rg : {
+            up : button-green,
+            down : button-red
         }
     },
 
     com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle : {
-        default : { font : fontSmall, fontColor : black },
-        big : { font : fontBig, fontColor: black }
+        title-border : {
+            font : chewy-96-border,
+            fontColor : white
+        }
     },
 
     com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle : {
-        default : { titleFont : fontBig, background : window }
+
     },
 
 

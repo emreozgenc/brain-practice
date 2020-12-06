@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -18,10 +19,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.emreozgenc.brainpractice.BrainPractice;
+import com.emreozgenc.brainpractice.entities.SoundManager;
 import com.emreozgenc.brainpractice.managers.Assets;
 
 public class MenuScreen implements Screen {
@@ -45,64 +48,33 @@ public class MenuScreen implements Screen {
         final TextureAtlas atlas = Assets.manager.get(Assets.uiskinAtlas);
         final Skin skin = new Skin();
 
-        BitmapFont fontBig = Assets.manager.get("fontBig.ttf");
-        BitmapFont fontSmall = Assets.manager.get("fontSmall.ttf");
+        BitmapFont chewy_96_border = Assets.manager.get("chewy-96-border.ttf");
+        BitmapFont chewy_64_border = Assets.manager.get("chewy-64-border.ttf");
+        BitmapFont chewy_48_border = Assets.manager.get("chewy-48-border.ttf");
 
-        skin.add("fontBig", fontBig, BitmapFont.class);
-        skin.add("fontSmall", fontSmall, BitmapFont.class);
+        skin.add("chewy-96-border", chewy_96_border, BitmapFont.class);
+        skin.add("chewy-64-border", chewy_64_border, BitmapFont.class);
+        skin.add("chewy-48-border", chewy_48_border, BitmapFont.class);
         skin.addRegions(atlas);
         skin.load(Gdx.files.internal("ui/uiskin.json"));
 
         final Table table = new Table();
         table.setFillParent(true);
-        table.defaults().pad(20f);
+        table.defaults().pad(20f*scale);
 
-        final TextButton startButton = new TextButton("START THE GAME", skin);
-        final TextButton scoreButton = new TextButton("TIME RECORDS", skin);
-        final TextButton exitButton = new TextButton("CLOSE THE GAME", skin);
-        final Label titleLabel = new Label("BRAIN PRACTICE v0.0.1", skin, "big");
-        final Label scoreLabel = new Label("", skin, "big");
+        final TextButton startButton = new TextButton("START THE GAME", skin, "btn-red-rg");
+        final TextButton scoreButton = new TextButton("TIME RECORDS", skin, "btn-green-rg");
+        final TextButton musicButton = new TextButton("UNMUTE MUSIC", skin, "btn-purple-rg");
+        final TextButton soundButton = new TextButton("UNMUTE SOUND", skin, "btn-orange-rg");
 
-        Preferences preferences = Gdx.app.getPreferences("TimeRecord");
-
-        float timeRecord = preferences.getFloat("4x4-Time");
-        String str = String.format("Best Time : %.1f seconds", timeRecord);
-        scoreLabel.setText(str);
-
-        table.add(titleLabel).padBottom(height*.1f);
         table.row();
         table.add(startButton).width(width*.8f).height(width*.16f);
         table.row();
         table.add(scoreButton).width(width*.8f).height(width*.16f);
         table.row();
-        table.add(exitButton).width(width*.8f).height(width*.16f);
+        table.add(musicButton).width(width*.8f).height(width*.16f);
         table.row();
-        table.add(scoreLabel).padTop(height*.1f);
-
-        final Window window = new Window("", skin);
-        window.setWidth(width*.9f);
-        window.setHeight(width*.9f);
-        window.setMovable(false);
-        window.setPosition(width/2f, height/2f, Align.center);
-        window.setLayoutEnabled(false);
-        window.setColor(1, 1, 1, 0);
-        window.setVisible(false);
-
-        final TextButton closeWindow = new TextButton("CLOSE WINDOW", skin, "inWindow");
-        closeWindow.setSize(window.getWidth()*.9f, window.getWidth()*.16f);
-        closeWindow.setPosition(window.getWidth()/2f, 20f * scale, Align.bottom);
-
-        window.add(closeWindow);
-
-
-
-
-        exitButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.exit();
-            }
-        });
+        table.add(soundButton).width(width*.8f).height(width*.16f);
 
         startButton.addListener(new ClickListener() {
             @Override
@@ -111,46 +83,29 @@ public class MenuScreen implements Screen {
             }
         });
 
-        scoreButton.addListener(new ClickListener() {
+        musicButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                window.setVisible(true);
-                window.addAction(Actions.fadeIn(.5f));
+                SoundManager.soundManager.switchThemeMusicPlay();
             }
         });
 
-        closeWindow.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                window.addAction(new SequenceAction(
-                        Actions.fadeOut(.5f),
-                        new Action() {
-                            @Override
-                            public boolean act(float delta) {
-                                window.setVisible(false);
-                                return true;
-                            }
-                        }
-                ));
-            }
-        });
 
 
 
         stage.addActor(table);
-        stage.addActor(window);
 
     }
 
     @Override
     public void show() {
-
+        SoundManager.soundManager.startThemeMusic();
     }
 
     @Override
     public void render(float delta) {
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        Gdx.gl20.glClearColor(1, 1, 1, 1);
+        Gdx.gl20.glClearColor(.95f, .95f, .95f, 1);
 
         stage.act(delta);
         stage.draw();
