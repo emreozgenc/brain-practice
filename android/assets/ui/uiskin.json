@@ -2,6 +2,7 @@
     com.badlogic.gdx.graphics.Color : {
         white : { r : 1, g : 1, b : 1, a : 1 },
         black : { r : 0, g : 0, b : 0, a : 1 },
+        orange : { hex : #f58220 }
     },
 
     com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle : {
@@ -74,6 +75,11 @@
         title-border : {
             font : chewy-96-border,
             fontColor : white
+        },
+
+        title-orange-border : {
+            font : chewy-96-border,
+            fontColor : orange
         }
     },
 

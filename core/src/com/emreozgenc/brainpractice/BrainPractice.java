@@ -1,9 +1,7 @@
 package com.emreozgenc.brainpractice;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.utils.Timer;
 import com.emreozgenc.brainpractice.entities.SoundManager;
 import com.emreozgenc.brainpractice.managers.Assets;
 import com.emreozgenc.brainpractice.screens.SplashScreen;
@@ -23,7 +21,13 @@ public class BrainPractice extends Game {
         Assets.load();
         Assets.manager.finishLoading();
         soundManager = new SoundManager();
-        setScreen(new SplashScreen(this));
+
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                setScreen(new SplashScreen(BrainPractice.this));
+            }
+        }, .5f);
     }
 
     @Override

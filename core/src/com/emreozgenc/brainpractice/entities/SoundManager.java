@@ -8,6 +8,8 @@ import com.emreozgenc.brainpractice.managers.Assets;
 public class SoundManager {
 
     public static SoundManager soundManager;
+    public boolean isThemeOpen = true;
+    public boolean isSFXOpen = true;
     public Sound selectSound;
     public Sound successSound;
     public Music themeMusic;
@@ -19,26 +21,32 @@ public class SoundManager {
         themeMusic = Assets.manager.get(Assets.themeMusic);
     }
 
+
     public void playSelectSound() {
-        selectSound.play();
+        if(isSFXOpen)
+            selectSound.play();
     }
 
     public void playSuccessSound() {
-        successSound.play();
+        if(isSFXOpen)
+            successSound.play();
     }
 
     public void startThemeMusic() {
-        themeMusic.setLooping(true);
-        themeMusic.play();
+        if (isThemeOpen) {
+            themeMusic.setLooping(true);
+            themeMusic.play();
+        }
     }
 
     public void switchThemeMusicPlay() {
-        if(themeMusic.isPlaying()) {
+        if (isThemeOpen) {
             themeMusic.stop();
-        }
-        else {
+            isThemeOpen = false;
+        } else {
             themeMusic.setLooping(true);
             themeMusic.play();
+            isThemeOpen = true;
         }
     }
 }

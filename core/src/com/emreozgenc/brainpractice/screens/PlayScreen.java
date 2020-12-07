@@ -62,9 +62,12 @@ public class PlayScreen implements Screen {
         table.align(Align.top | Align.center);
 
         timeLabel = new Label("Time : 0s", skin, "title-border");
+        final Label timeLabelInfo = new Label("Time", skin, "title-orange-border");
         final TextButton returnButton = new TextButton("RETURN MENU", skin, "btn-red-sm");
 
         table.add(timeLabel).padTop(50f * scale);
+        table.row();
+        table.add(timeLabelInfo);
         table.row();
         table.add(returnButton).expandX().width(width*.8f).height(width*.08f);
 

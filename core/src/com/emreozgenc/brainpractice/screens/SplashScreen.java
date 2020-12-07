@@ -10,13 +10,15 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.emreozgenc.brainpractice.BrainPractice;
 import com.emreozgenc.brainpractice.managers.Assets;
 
 public class SplashScreen implements Screen {
 
     private static final float DURATION = 1.5f;
+    private static final float WIDTH = 8f;
+    private static final float HEIGHT = 8f;
 
     private BrainPractice game;
     private Stage stage;
@@ -25,12 +27,12 @@ public class SplashScreen implements Screen {
 
     public SplashScreen(BrainPractice game) {
         this.game = game;
-        stage = new Stage(new FitViewport(BrainPractice.V_WIDTH, BrainPractice.V_HEIGHT));
+        stage = new Stage(new ExtendViewport(BrainPractice.V_WIDTH, BrainPractice.V_HEIGHT));
         logoTexture = Assets.manager.get(Assets.logo, Texture.class);
         logoTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         logo = new Image(logoTexture);
         logo.setColor(1, 1, 1, 0);
-        logo.setSize(BrainPractice.V_WIDTH, BrainPractice.V_WIDTH);
+        logo.setSize(WIDTH, HEIGHT);
         logo.setPosition(BrainPractice.V_WIDTH/2f, BrainPractice.V_HEIGHT/2f + 1, Align.center);
         stage.addActor(logo);
 
@@ -85,6 +87,5 @@ public class SplashScreen implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
-        logoTexture.dispose();
     }
 }
