@@ -7,7 +7,7 @@ import com.emreozgenc.brainpractice.managers.Assets;
 import com.emreozgenc.brainpractice.screens.SplashScreen;
 
 public class BrainPractice extends Game {
-
+    
     public static final int WIDTH = 450;
     public static final int HEIGHT = 800;
 
@@ -28,6 +28,7 @@ public class BrainPractice extends Game {
                 setScreen(new SplashScreen(BrainPractice.this));
             }
         }, .5f);
+
     }
 
     @Override

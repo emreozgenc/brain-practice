@@ -5,12 +5,21 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.emreozgenc.brainpractice.BrainPractice;
 import com.emreozgenc.brainpractice.entities.SoundManager;
@@ -21,6 +30,10 @@ public class MenuScreen implements Screen {
     private BrainPractice game;
     private Stage stage;
 
+    private static final float BTN_WIDTH_SCALE = .8f;
+    private static final float BTN_HEIGHT_SCALE = .2f;
+    private static final float DEFAULT_SCREEN_WIDTH = 1080f;
+    private static final float DEFAULT_TABLE_PAD = 20f;
 
     public MenuScreen(BrainPractice game) {
         this.game = game;
@@ -30,7 +43,7 @@ public class MenuScreen implements Screen {
     }
 
     private void initUI() {
-        final float scale = Gdx.graphics.getWidth() / 1080f;
+        final float scale = Gdx.graphics.getWidth() / DEFAULT_SCREEN_WIDTH;
         final int width = Gdx.graphics.getWidth();
         final int height = Gdx.graphics.getHeight();
 
@@ -49,26 +62,51 @@ public class MenuScreen implements Screen {
 
         final Table table = new Table();
         table.setFillParent(true);
-        table.defaults().pad(20f*scale);
+        table.defaults().pad(DEFAULT_TABLE_PAD * scale);
 
-        final TextButton startButton = new TextButton("START THE GAME", skin, "btn-red-rg");
+        final TextButton startButton = new TextButton("START GAME", skin, "btn-red-rg");
         final TextButton scoreButton = new TextButton("TIME RECORDS", skin, "btn-green-rg");
         final TextButton musicButton = new TextButton("UNMUTE MUSIC", skin, "btn-purple-rg");
         final TextButton soundButton = new TextButton("UNMUTE SOUND", skin, "btn-orange-rg");
 
+        final float mainBtnWidth = width * BTN_WIDTH_SCALE;
+        final float mainBtnHeight = mainBtnWidth * BTN_HEIGHT_SCALE;
+
+        table.add(startButton).width(mainBtnWidth).height(mainBtnHeight);
         table.row();
-        table.add(startButton).width(width*.8f).height(width*.16f);
+        table.add(scoreButton).width(mainBtnWidth).height(mainBtnHeight);
         table.row();
-        table.add(scoreButton).width(width*.8f).height(width*.16f);
+        table.add(musicButton).width(mainBtnWidth).height(mainBtnHeight);
         table.row();
-        table.add(musicButton).width(width*.8f).height(width*.16f);
-        table.row();
-        table.add(soundButton).width(width*.8f).height(width*.16f);
+        table.add(soundButton).width(mainBtnWidth).height(mainBtnHeight);
+
+        final TextButton dif_4_3 = new TextButton("4x3 - EASY", skin, "btn-green-rg");
+        final TextButton dif_4_4 = new TextButton("4x4 - MEDIUM", skin, "btn-orange-rg");
+        final TextButton dif_4_5 = new TextButton("4x5 - HARD", skin, "btn-red-rg");
+        final TextButton difClose = new TextButton("CLOSE", skin, "btn-purple-rg");
+
+        final Window difWindow = new Window("", skin);
+        difWindow.setSize(width * .9f, height * .6f);
+        difWindow.setMovable(false);
+        difWindow.setPosition(width / 2f, height / 2f, Align.center);
+        difWindow.defaults().pad(20f * scale);
+        difWindow.setColor(1, 1, 1, 0);
+        difWindow.setVisible(false);
+
+        difWindow.add(dif_4_3).expandX().fillX().height(width * .16f);
+        difWindow.row();
+        difWindow.add(dif_4_4).expandX().fillX().height(width * .16f);
+        difWindow.row();
+        difWindow.add(dif_4_5).expandX().fillX().height(width * .16f);
+        difWindow.row();
+        difWindow.add(difClose).expandX().fillX().height(width * .16f);
+
 
         startButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new PlayScreen(game));
+                difWindow.setVisible(true);
+                difWindow.addAction(Actions.fadeIn(.5f));
             }
         });
 
@@ -77,17 +115,53 @@ public class MenuScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 SoundManager.soundManager.switchThemeMusicPlay();
 
-                if(SoundManager.soundManager.isThemeOpen)
+                if (SoundManager.soundManager.isThemeOpen)
                     musicButton.setText("MUTE MUSIC");
                 else
                     musicButton.setText("UNMUTE MUSIC");
             }
         });
 
+        difClose.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                difWindow.addAction(new SequenceAction(
+                        Actions.fadeOut(.5f),
+                        new Action() {
+                            @Override
+                            public boolean act(float delta) {
+                                difWindow.setVisible(false);
+                                return true;
+                            }
+                        }
+                ));
+            }
+        });
 
+        dif_4_3.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new PlayScreen(game, 4, 3));
+            }
+        });
+
+        dif_4_4.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new PlayScreen(game, 4, 4));
+            }
+        });
+
+        dif_4_5.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new PlayScreen(game, 4, 5));
+            }
+        });
 
 
         stage.addActor(table);
+        stage.addActor(difWindow);
 
     }
 

@@ -8,7 +8,7 @@ import com.emreozgenc.brainpractice.managers.Assets;
 public class SoundManager {
 
     public static SoundManager soundManager;
-    public boolean isThemeOpen = true;
+    public boolean isThemeOpen = false;
     public boolean isSFXOpen = true;
     public Sound selectSound;
     public Sound successSound;

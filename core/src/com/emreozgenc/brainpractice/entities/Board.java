@@ -21,7 +21,7 @@ import java.util.Random;
 
 public class Board {
 
-    private static final float MARGIN_BOT = 1f;
+    private static final float MARGIN_BOT = 2f;
     private static final float MARGIN_LEFT = .5f;
     private static final float DELAY = 1.5f;
     private static final float DELAY_SOUND = .5f;
@@ -38,7 +38,7 @@ public class Board {
 
     public static Array<Card> selectedCards;
 
-    public Board(Label timeLabel, int width, int height) {
+    public Board(Label timeLabel, int height, int width) {
         this.width = width;
         this.height = height;
         this.timeLabel = timeLabel;
@@ -47,7 +47,7 @@ public class Board {
         stage = new Stage(new ExtendViewport(BrainPractice.V_WIDTH, BrainPractice.V_HEIGHT));
         stage.getViewport().apply();
         cards = new Card[height][width];
-        cardSize = (BrainPractice.V_WIDTH - 2 * MARGIN_LEFT) / width;
+        cardSize = (BrainPractice.V_WIDTH - 2 * MARGIN_LEFT) / height;
         selectedCards = new Array<>();
         count = width * height;
         atlas = Assets.manager.get(Assets.cardsAtlas);
@@ -61,7 +61,7 @@ public class Board {
         stage.draw();
 
         if (!isFinished) {
-            String str = String.format("Time : %.1f" + "s", time);
+            String str = String.format("%.1f", time);
             timeLabel.setText(str);
         }
     }
@@ -108,8 +108,6 @@ public class Board {
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
-                PlayScreen.stage.dispose();
-                dispose();
                 game.setScreen(new MenuScreen(game));
             }
         }, DELAY);
@@ -139,7 +137,7 @@ public class Board {
 
         for (int i = 0; i < height; i++) {
 
-            if (val >= count / 2)
+            if (i == height/2)
                 val = 0;
 
             for (int j = 0; j < width; j++) {
@@ -148,6 +146,7 @@ public class Board {
                 Card card = new Card(frontFace, backFace, val, this);
                 card.setSize(cardSize, cardSize);
                 cards[i][j] = card;
+                System.out.println(val);
                 val++;
             }
         }
@@ -173,13 +172,13 @@ public class Board {
     }
 
     private void posCards() {
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                cards[i][j].setPosition(
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                cards[j][i].setPosition(
                         MARGIN_LEFT + j * cardSize,
                         MARGIN_BOT + i * cardSize
                 );
-                stage.addActor(cards[i][j]);
+                stage.addActor(cards[j][i]);
             }
         }
     }

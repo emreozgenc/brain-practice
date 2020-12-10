@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.emreozgenc.brainpractice.BrainPractice;
 import com.emreozgenc.brainpractice.managers.Assets;
 
@@ -27,7 +28,7 @@ public class SplashScreen implements Screen {
 
     public SplashScreen(BrainPractice game) {
         this.game = game;
-        stage = new Stage(new ExtendViewport(BrainPractice.V_WIDTH, BrainPractice.V_HEIGHT));
+        stage = new Stage(new FitViewport(BrainPractice.V_WIDTH, BrainPractice.V_HEIGHT));
         logoTexture = Assets.manager.get(Assets.logo, Texture.class);
         logoTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         logo = new Image(logoTexture);

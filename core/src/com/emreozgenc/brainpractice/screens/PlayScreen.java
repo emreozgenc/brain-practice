@@ -1,6 +1,7 @@
 package com.emreozgenc.brainpractice.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -24,15 +25,15 @@ public class PlayScreen implements Screen {
 
     private BrainPractice game;
     private Board board;
-    public static Stage stage;
+    public Stage stage;
     public Label timeLabel;
 
-    public PlayScreen(BrainPractice game) {
+    public PlayScreen(BrainPractice game, int height, int width) {
         stage = new Stage(new ScreenViewport());
         stage.getViewport().apply();
         initUI();
         this.game = game;
-        board = new Board(timeLabel, 4, 4);
+        board = new Board(timeLabel, height, width);
 
         InputMultiplexer multiplexer = new InputMultiplexer(board.stage, stage);
         Gdx.input.setInputProcessor(multiplexer);
@@ -61,16 +62,17 @@ public class PlayScreen implements Screen {
         table.setFillParent(true);
         table.align(Align.top | Align.center);
 
-        timeLabel = new Label("Time : 0s", skin, "title-border");
-        final Label timeLabelInfo = new Label("Time", skin, "title-orange-border");
-        final TextButton returnButton = new TextButton("RETURN MENU", skin, "btn-red-sm");
+        timeLabel = new Label("", skin, "title-border");
+        timeLabel.setAlignment(Align.center);
+        final Label timeLabelInfo = new Label("TIME PASSED", skin, "title-orange-border");
+        timeLabelInfo.setAlignment(Align.center);
+        final TextButton returnButton = new TextButton("X", skin, "btn-red-sm");
+        returnButton.setSize(100f * scale, 100f * scale);
+        returnButton.setPosition(Gdx.graphics.getWidth() - 5f * scale, Gdx.graphics.getHeight() -5f * scale, (Align.top | Align.right));
 
-        table.add(timeLabel).padTop(50f * scale);
+        table.add(timeLabelInfo).expandX().fillX().colspan(2);
         table.row();
-        table.add(timeLabelInfo);
-        table.row();
-        table.add(returnButton).expandX().width(width*.8f).height(width*.08f);
-
+        table.add(timeLabel).expandX().fillX().colspan(2);
 
         returnButton.addListener(new ClickListener() {
             @Override
@@ -82,6 +84,7 @@ public class PlayScreen implements Screen {
 
 
         stage.addActor(table);
+        stage.addActor(returnButton);
     }
 
     @Override
