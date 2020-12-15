@@ -1,24 +1,25 @@
-package com.emreozgenc.brainpractice.entities;
+package com.emreozgenc.brainpractice.managers;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.emreozgenc.brainpractice.managers.Assets;
 
-public class SoundManager {
+public class Sounds {
 
-    public static SoundManager soundManager;
-    public boolean isThemeOpen = false;
-    public boolean isSFXOpen = true;
+    public static Sounds manager;
+    public boolean isThemeOpen;
+    public boolean isSFXOpen;
     public Sound selectSound;
     public Sound successSound;
     public Music themeMusic;
 
-    public SoundManager() {
-        soundManager = this;
+    public Sounds() {
+        manager = this;
         selectSound = Assets.manager.get(Assets.selectSound);
         successSound = Assets.manager.get(Assets.successSound);
         themeMusic = Assets.manager.get(Assets.themeMusic);
+
+        isThemeOpen = PreferencesManager.getThemeSetting();
+        isSFXOpen = PreferencesManager.getSoundSetting();
     }
 
 
@@ -48,5 +49,16 @@ public class SoundManager {
             themeMusic.play();
             isThemeOpen = true;
         }
+
+        PreferencesManager.setThemeSetting(isThemeOpen);
+    }
+
+    public void switchSFXPlay() {
+        if(isSFXOpen)
+            isSFXOpen = false;
+        else
+            isSFXOpen = true;
+
+        PreferencesManager.setSoundSetting(isSFXOpen);
     }
 }

@@ -28,8 +28,6 @@ public class Card extends Image {
         isSolved = false;
         isOpen = false;
 
-        System.out.println("Test");
-
         setDrawable(this.backFace);
 
         addListener(new ClickListener() {

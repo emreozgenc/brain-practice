@@ -2,19 +2,17 @@ package com.emreozgenc.brainpractice.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.emreozgenc.brainpractice.BrainPractice;
 import com.emreozgenc.brainpractice.managers.Assets;
-import com.emreozgenc.brainpractice.screens.MenuScreen;
+import com.emreozgenc.brainpractice.managers.PreferencesManager;
+import com.emreozgenc.brainpractice.managers.Sounds;
 import com.emreozgenc.brainpractice.screens.PlayScreen;
 
 import java.util.Random;
@@ -76,7 +74,7 @@ public class Board {
             first.isSolved = true;
             second.isSolved = true;
             selectedCards.clear();
-            SoundManager.soundManager.playSelectSound();
+            Sounds.manager.playSelectSound();
             controlFinish();
         } else {
             Timer.schedule(new Timer.Task() {
@@ -104,26 +102,25 @@ public class Board {
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
-                SoundManager.soundManager.playSuccessSound();
+                Sounds.manager.playSuccessSound();
             }
         }, DELAY_SOUND);
     }
 
     private void setRecord() {
-        Preferences preferences = Gdx.app.getPreferences("TimeRecord");
         float currentTime = time;
 
-        if(!preferences.contains(height + "x" + width + "-Time")) {
-            preferences.putFloat(height + "x" + width + "-Time", currentTime);
-            preferences.flush();
+        String key = height + "x" + width + "-Time";
+        float oldTime = PreferencesManager.getRecord(key);
+
+        if(oldTime == 0f) {
+            PreferencesManager.setRecord(key, currentTime);
+            playScreen.showRecordResult(currentTime);
             return;
         }
 
-        float oldTime = preferences.getFloat(height + "x" + width + "-Time");
-
         if (currentTime < oldTime) {
-            preferences.putFloat(height + "x" + width + "-Time", currentTime);
-            preferences.flush();
+            PreferencesManager.setRecord(key, currentTime);
             playScreen.showRecordResult(currentTime);
             return;
         }
@@ -146,7 +143,6 @@ public class Board {
                 Card card = new Card(frontFace, backFace, val, this);
                 card.setSize(cardSize, cardSize);
                 cards[i][j] = card;
-                System.out.println(val);
                 val++;
             }
         }

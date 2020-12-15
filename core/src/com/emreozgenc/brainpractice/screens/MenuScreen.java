@@ -3,12 +3,12 @@ package com.emreozgenc.brainpractice.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -20,15 +20,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.emreozgenc.brainpractice.BrainPractice;
 import com.emreozgenc.brainpractice.Constants;
-import com.emreozgenc.brainpractice.entities.SoundManager;
+import com.emreozgenc.brainpractice.managers.PreferencesManager;
+import com.emreozgenc.brainpractice.managers.Sounds;
 import com.emreozgenc.brainpractice.managers.Assets;
 
 public class MenuScreen implements Screen {
@@ -71,8 +70,8 @@ public class MenuScreen implements Screen {
 
         final TextButton startButton = new TextButton("START GAME", skin, "btn-red-rg");
         final TextButton scoreButton = new TextButton("TIME RECORDS", skin, "btn-green-rg");
-        final TextButton musicButton = new TextButton("MUSIC", skin, "btn-purple-rg");
-        final TextButton soundButton = new TextButton("SOUND", skin, "btn-orange-rg");
+        final TextButton musicButton = new TextButton("MUSIC ON/OFF", skin, "btn-purple-rg");
+        final TextButton soundButton = new TextButton("SOUND ON/OFF", skin, "btn-orange-rg");
 
 
         table.add(gameLogo).width(Constants.GAME_LOGO_WIDTH).height(Constants.GAME_LOGO_HEIGHT);
@@ -120,9 +119,9 @@ public class MenuScreen implements Screen {
         // SCORE TABLE
 
         Preferences scores = Gdx.app.getPreferences("TimeRecord");
-        final String record_4x3 = String.format("%.1fs", scores.getFloat("4x3-Time"));
-        final String record_4x4 = String.format("%.1fs", scores.getFloat("4x4-Time"));
-        final String record_4x5 = String.format("%.1fs", scores.getFloat("4x5-Time"));
+        final String record_4x3 = String.format("%.1fs", PreferencesManager.getEasyRecord());
+        final String record_4x4 = String.format("%.1fs", PreferencesManager.getMediumRecord());
+        final String record_4x5 = String.format("%.1fs", PreferencesManager.getHardRecord());
 
         final Table scoreTable = new Table();
         scoreTable.defaults().pad(Constants.TABLE_DEFAULT_PAD);
@@ -174,7 +173,14 @@ public class MenuScreen implements Screen {
         musicButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                SoundManager.soundManager.switchThemeMusicPlay();
+                Sounds.manager.switchThemeMusicPlay();
+            }
+        });
+
+        soundButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Sounds.manager.switchSFXPlay();
             }
         });
 
@@ -251,7 +257,7 @@ public class MenuScreen implements Screen {
 
     @Override
     public void show() {
-        SoundManager.soundManager.startThemeMusic();
+        Sounds.manager.startThemeMusic();
     }
 
     @Override
