@@ -35,13 +35,15 @@ public class Board {
     private Label timeLabel;
     private float time;
     private boolean isFinished;
+    private PlayScreen playScreen;
 
     public static Array<Card> selectedCards;
 
-    public Board(Label timeLabel, int height, int width) {
+    public Board(PlayScreen playScreen, int height, int width) {
         this.width = width;
         this.height = height;
-        this.timeLabel = timeLabel;
+        this.playScreen = playScreen;
+        this.timeLabel = playScreen.timeLabel;
         time = 0f;
         isFinished = false;
         stage = new Stage(new ExtendViewport(BrainPractice.V_WIDTH, BrainPractice.V_HEIGHT));
@@ -62,7 +64,7 @@ public class Board {
 
         if (!isFinished) {
             String str = String.format("%.1f", time);
-            timeLabel.setText(str);
+            timeLabel.setText(str + " seconds");
         }
     }
 
@@ -105,12 +107,6 @@ public class Board {
                 SoundManager.soundManager.playSuccessSound();
             }
         }, DELAY_SOUND);
-        Timer.schedule(new Timer.Task() {
-            @Override
-            public void run() {
-                game.setScreen(new MenuScreen(game));
-            }
-        }, DELAY);
     }
 
     private void setRecord() {
@@ -128,7 +124,11 @@ public class Board {
         if (currentTime < oldTime) {
             preferences.putFloat(height + "x" + width + "-Time", currentTime);
             preferences.flush();
+            playScreen.showRecordResult(currentTime);
+            return;
         }
+
+        playScreen.showResult(currentTime);
     }
 
     private void initCards() {

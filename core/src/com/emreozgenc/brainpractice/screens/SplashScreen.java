@@ -7,13 +7,16 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
+import com.badlogic.gdx.scenes.scene2d.actions.SizeToAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.emreozgenc.brainpractice.BrainPractice;
 import com.emreozgenc.brainpractice.managers.Assets;
+
+import java.rmi.activation.ActivationID;
 
 public class SplashScreen implements Screen {
 
@@ -34,7 +37,7 @@ public class SplashScreen implements Screen {
         logo = new Image(logoTexture);
         logo.setColor(1, 1, 1, 0);
         logo.setSize(WIDTH, HEIGHT);
-        logo.setPosition(BrainPractice.V_WIDTH/2f, BrainPractice.V_HEIGHT/2f + 1, Align.center);
+        logo.setPosition(BrainPractice.V_WIDTH / 2f, BrainPractice.V_HEIGHT / 2f + 1, Align.center);
         stage.addActor(logo);
 
     }
@@ -47,14 +50,12 @@ public class SplashScreen implements Screen {
                 new Action() {
                     @Override
                     public boolean act(float delta) {
-                        dispose();
                         game.setScreen(new MenuScreen(game));
                         return true;
                     }
                 }
         ));
     }
-
     @Override
     public void render(float delta) {
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);

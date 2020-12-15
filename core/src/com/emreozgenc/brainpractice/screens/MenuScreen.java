@@ -1,16 +1,21 @@
 package com.emreozgenc.brainpractice.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -22,6 +27,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.emreozgenc.brainpractice.BrainPractice;
+import com.emreozgenc.brainpractice.Constants;
 import com.emreozgenc.brainpractice.entities.SoundManager;
 import com.emreozgenc.brainpractice.managers.Assets;
 
@@ -30,10 +36,6 @@ public class MenuScreen implements Screen {
     private BrainPractice game;
     private Stage stage;
 
-    private static final float BTN_WIDTH_SCALE = .8f;
-    private static final float BTN_HEIGHT_SCALE = .2f;
-    private static final float DEFAULT_SCREEN_WIDTH = 1080f;
-    private static final float DEFAULT_TABLE_PAD = 20f;
 
     public MenuScreen(BrainPractice game) {
         this.game = game;
@@ -43,12 +45,13 @@ public class MenuScreen implements Screen {
     }
 
     private void initUI() {
-        final float scale = Gdx.graphics.getWidth() / DEFAULT_SCREEN_WIDTH;
-        final int width = Gdx.graphics.getWidth();
-        final int height = Gdx.graphics.getHeight();
-
         final TextureAtlas atlas = Assets.manager.get(Assets.uiskinAtlas);
         final Skin skin = new Skin();
+
+        final Texture gameLogoTexture = Assets.manager.get(Assets.gameLogo);
+        gameLogoTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        final Image gameLogo = new Image(gameLogoTexture);
+        gameLogo.setAlign(Align.top | Align.center);
 
         BitmapFont chewy_96_border = Assets.manager.get("chewy-96-border.ttf");
         BitmapFont chewy_64_border = Assets.manager.get("chewy-64-border.ttf");
@@ -60,53 +63,111 @@ public class MenuScreen implements Screen {
         skin.addRegions(atlas);
         skin.load(Gdx.files.internal("ui/uiskin.json"));
 
+        // MAIN TABLE
+
         final Table table = new Table();
         table.setFillParent(true);
-        table.defaults().pad(DEFAULT_TABLE_PAD * scale);
+        table.defaults().pad(Constants.TABLE_DEFAULT_PAD);
 
         final TextButton startButton = new TextButton("START GAME", skin, "btn-red-rg");
         final TextButton scoreButton = new TextButton("TIME RECORDS", skin, "btn-green-rg");
-        final TextButton musicButton = new TextButton("UNMUTE MUSIC", skin, "btn-purple-rg");
-        final TextButton soundButton = new TextButton("UNMUTE SOUND", skin, "btn-orange-rg");
+        final TextButton musicButton = new TextButton("MUSIC", skin, "btn-purple-rg");
+        final TextButton soundButton = new TextButton("SOUND", skin, "btn-orange-rg");
 
-        final float mainBtnWidth = width * BTN_WIDTH_SCALE;
-        final float mainBtnHeight = mainBtnWidth * BTN_HEIGHT_SCALE;
 
-        table.add(startButton).width(mainBtnWidth).height(mainBtnHeight);
+        table.add(gameLogo).width(Constants.GAME_LOGO_WIDTH).height(Constants.GAME_LOGO_HEIGHT);
         table.row();
-        table.add(scoreButton).width(mainBtnWidth).height(mainBtnHeight);
+        table.add(startButton).width(Constants.BTN_DEFAULT_WIDTH).height(Constants.BTN_DEFAULT_HEIGHT);
         table.row();
-        table.add(musicButton).width(mainBtnWidth).height(mainBtnHeight);
+        table.add(scoreButton).width(Constants.BTN_DEFAULT_WIDTH).height(Constants.BTN_DEFAULT_HEIGHT);
         table.row();
-        table.add(soundButton).width(mainBtnWidth).height(mainBtnHeight);
+        table.add(musicButton).width(Constants.BTN_DEFAULT_WIDTH).height(Constants.BTN_DEFAULT_HEIGHT);
+        table.row();
+        table.add(soundButton).width(Constants.BTN_DEFAULT_WIDTH).height(Constants.BTN_DEFAULT_HEIGHT);
+
+        // LEVEL TABLE
+
+        final Table levelTable = new Table();
+        levelTable.defaults().pad(Constants.TABLE_DEFAULT_PAD);
 
         final TextButton dif_4_3 = new TextButton("4x3 - EASY", skin, "btn-green-rg");
         final TextButton dif_4_4 = new TextButton("4x4 - MEDIUM", skin, "btn-orange-rg");
         final TextButton dif_4_5 = new TextButton("4x5 - HARD", skin, "btn-red-rg");
         final TextButton difClose = new TextButton("CLOSE", skin, "btn-purple-rg");
+        final Label difLabel = new Label("SELECT\nDIFFICULTY", skin, "title-border");
+        difLabel.setAlignment(Align.center);
 
-        final Window difWindow = new Window("", skin);
-        difWindow.setSize(width * .9f, height * .6f);
-        difWindow.setMovable(false);
-        difWindow.setPosition(width / 2f, height / 2f, Align.center);
-        difWindow.defaults().pad(20f * scale);
-        difWindow.setColor(1, 1, 1, 0);
-        difWindow.setVisible(false);
+        levelTable.add(difLabel);
+        levelTable.row();
+        levelTable.add(dif_4_3).width(Constants.BTN_DEFAULT_WIDTH).height(Constants.BTN_DEFAULT_HEIGHT);
+        levelTable.row();
+        levelTable.add(dif_4_4).width(Constants.BTN_DEFAULT_WIDTH).height(Constants.BTN_DEFAULT_HEIGHT);
+        levelTable.row();
+        levelTable.add(dif_4_5).width(Constants.BTN_DEFAULT_WIDTH).height(Constants.BTN_DEFAULT_HEIGHT);
+        levelTable.row();
+        levelTable.add(difClose).width(Constants.BTN_DEFAULT_WIDTH).height(Constants.BTN_DEFAULT_HEIGHT);
+        levelTable.pack();
 
-        difWindow.add(dif_4_3).expandX().fillX().height(width * .16f);
-        difWindow.row();
-        difWindow.add(dif_4_4).expandX().fillX().height(width * .16f);
-        difWindow.row();
-        difWindow.add(dif_4_5).expandX().fillX().height(width * .16f);
-        difWindow.row();
-        difWindow.add(difClose).expandX().fillX().height(width * .16f);
+        levelTable.setPosition(Constants.WIDTH / 2f, Constants.HEIGHT / 2f, Align.center);
+
+        levelTable.setBackground(new NinePatchDrawable(new NinePatch(
+                atlas.findRegion("window"), 44, 44, 44, 44
+        )));
+
+        levelTable.setColor(1, 1, 1, 0);
+        levelTable.setVisible(false);
+
+        // SCORE TABLE
+
+        Preferences scores = Gdx.app.getPreferences("TimeRecord");
+        final String record_4x3 = String.format("%.1fs", scores.getFloat("4x3-Time"));
+        final String record_4x4 = String.format("%.1fs", scores.getFloat("4x4-Time"));
+        final String record_4x5 = String.format("%.1fs", scores.getFloat("4x5-Time"));
+
+        final Table scoreTable = new Table();
+        scoreTable.defaults().pad(Constants.TABLE_DEFAULT_PAD);
+
+        final Label scoreTitle = new Label("TIME RECORDS", skin, "title-green-border");
+        final Label easyRecordTitle = new Label("EASY : ", skin, "title-orange-border");
+        final Label easyRecord = new Label(record_4x3, skin, "title-border");
+        final Label medRecordTitle = new Label("MEDIUM : ", skin, "title-orange-border");
+        final Label medRecord = new Label(record_4x4, skin, "title-border");
+        final Label hardRecordTitle = new Label("HARD : ", skin, "title-orange-border");
+        final Label hardRecord = new Label(record_4x5, skin, "title-border");
+        final TextButton closeRecord = new TextButton("CLOSE", skin, "btn-red-rg");
+
+        scoreTable.add(scoreTitle).colspan(2);
+        scoreTable.row();
+        scoreTable.add(easyRecordTitle).align(Align.left);
+        scoreTable.add(easyRecord);
+        scoreTable.row();
+        scoreTable.add(medRecordTitle).align(Align.left);
+        scoreTable.add(medRecord);
+        scoreTable.row();
+        scoreTable.add(hardRecordTitle).align(Align.left);
+        scoreTable.add(hardRecord);
+        scoreTable.row();
+        scoreTable.add(closeRecord).width(Constants.BTN_DEFAULT_WIDTH).height(Constants.BTN_DEFAULT_HEIGHT).colspan(2);
+
+        scoreTable.pack();
+
+        scoreTable.setPosition(Constants.WIDTH/2f, Constants.HEIGHT/2f, Align.center);
+
+
+        scoreTable.setBackground(new NinePatchDrawable(new NinePatch(
+                atlas.findRegion("window"), 44, 44, 44, 44
+        )));
+
+        scoreTable.setColor(1, 1, 1, 0);
+        scoreTable.setVisible(false);
 
 
         startButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                difWindow.setVisible(true);
-                difWindow.addAction(Actions.fadeIn(.5f));
+                levelTable.setVisible(true);
+                levelTable.addAction(Actions.fadeIn(.5f));
+                table.setTouchable(Touchable.disabled);
             }
         });
 
@@ -114,23 +175,19 @@ public class MenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 SoundManager.soundManager.switchThemeMusicPlay();
-
-                if (SoundManager.soundManager.isThemeOpen)
-                    musicButton.setText("MUTE MUSIC");
-                else
-                    musicButton.setText("UNMUTE MUSIC");
             }
         });
 
         difClose.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                difWindow.addAction(new SequenceAction(
+                levelTable.addAction(new SequenceAction(
                         Actions.fadeOut(.5f),
                         new Action() {
                             @Override
                             public boolean act(float delta) {
-                                difWindow.setVisible(false);
+                                levelTable.setVisible(false);
+                                table.setTouchable(Touchable.enabled);
                                 return true;
                             }
                         }
@@ -159,9 +216,36 @@ public class MenuScreen implements Screen {
             }
         });
 
+        closeRecord.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                scoreTable.addAction(new SequenceAction(
+                        Actions.fadeOut(.5f),
+                        new Action() {
+                            @Override
+                            public boolean act(float delta) {
+                                scoreTable.setVisible(false);
+                                table.setTouchable(Touchable.enabled);
+                                return true;
+                            }
+                        }
+                ));
+            }
+        });
+
+        scoreButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                scoreTable.setVisible(true);
+                scoreTable.addAction(Actions.fadeIn(.5f));
+                table.setTouchable(Touchable.disabled);
+            }
+        });
+
 
         stage.addActor(table);
-        stage.addActor(difWindow);
+        stage.addActor(levelTable);
+        stage.addActor(scoreTable);
 
     }
 

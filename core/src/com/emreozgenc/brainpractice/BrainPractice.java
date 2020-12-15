@@ -1,6 +1,8 @@
 package com.emreozgenc.brainpractice;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.utils.Timer;
 import com.emreozgenc.brainpractice.entities.SoundManager;
 import com.emreozgenc.brainpractice.managers.Assets;
@@ -22,6 +24,7 @@ public class BrainPractice extends Game {
         Assets.manager.finishLoading();
         soundManager = new SoundManager();
 
+        testFunc();
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
@@ -35,5 +38,11 @@ public class BrainPractice extends Game {
     public void dispose() {
         super.dispose();
         Assets.dispose();
+    }
+
+    private void testFunc() {
+        Preferences pref = Gdx.app.getPreferences("TimeRecord");
+        pref.putFloat("4x3-Time", 100f);
+        pref.flush();
     }
 }

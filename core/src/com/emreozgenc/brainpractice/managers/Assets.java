@@ -19,6 +19,7 @@ public class Assets {
     public static final String cardsAtlas = "cards.atlas";
     public static final String uiskinAtlas = "ui/uiskin.atlas";
     public static final String logo = "logo.png";
+    public static final String gameLogo = "gamelogo.png";
     public static final String selectSound = "sounds/select.ogg";
     public static final String successSound = "sounds/success.ogg";
     public static final String themeMusic = "sounds/music.ogg";
@@ -57,6 +58,7 @@ public class Assets {
         manager.load(cardsAtlas, TextureAtlas.class);
         manager.load(uiskinAtlas, TextureAtlas.class);
         manager.load(logo, Texture.class);
+        manager.load(gameLogo, Texture.class);
         manager.load(selectSound, Sound.class);
         manager.load(successSound, Sound.class);
         manager.load(themeMusic, Music.class);
