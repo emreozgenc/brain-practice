@@ -18,8 +18,8 @@ public class Sounds {
         successSound = Assets.manager.get(Assets.successSound);
         themeMusic = Assets.manager.get(Assets.themeMusic);
 
-        isThemeOpen = PreferencesManager.getThemeSetting();
-        isSFXOpen = PreferencesManager.getSoundSetting();
+        isThemeOpen = Preference.manager.getThemeSetting();
+        isSFXOpen = Preference.manager.getSoundSetting();
     }
 
 
@@ -50,7 +50,7 @@ public class Sounds {
             isThemeOpen = true;
         }
 
-        PreferencesManager.setThemeSetting(isThemeOpen);
+        Preference.manager.setThemeSetting(isThemeOpen);
     }
 
     public void switchSFXPlay() {
@@ -59,6 +59,6 @@ public class Sounds {
         else
             isSFXOpen = true;
 
-        PreferencesManager.setSoundSetting(isSFXOpen);
+        Preference.manager.setSoundSetting(isSFXOpen);
     }
 }

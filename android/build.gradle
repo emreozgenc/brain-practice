@@ -19,9 +19,9 @@ android {
     defaultConfig {
         applicationId "com.emreozgenc.brainpractice"
         minSdkVersion 14
-        targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
+        targetSdkVersion 29
+        versionCode 8
+        versionName "1.1"
     }
     buildTypes {
         release {

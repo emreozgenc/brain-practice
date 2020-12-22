@@ -9,9 +9,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.emreozgenc.brainpractice.BrainPractice;
 import com.emreozgenc.brainpractice.managers.Assets;
-import com.emreozgenc.brainpractice.managers.PreferencesManager;
+import com.emreozgenc.brainpractice.managers.Preference;
 import com.emreozgenc.brainpractice.managers.Sounds;
 import com.emreozgenc.brainpractice.screens.PlayScreen;
 
@@ -111,16 +113,17 @@ public class Board {
         float currentTime = time;
 
         String key = height + "x" + width + "-Time";
-        float oldTime = PreferencesManager.getRecord(key);
+        float oldTime = Preference.manager.getRecord(key);
+        System.out.println(oldTime);
 
         if(oldTime == 0f) {
-            PreferencesManager.setRecord(key, currentTime);
+            Preference.manager.setRecord(key, currentTime);
             playScreen.showRecordResult(currentTime);
             return;
         }
 
         if (currentTime < oldTime) {
-            PreferencesManager.setRecord(key, currentTime);
+            Preference.manager.setRecord(key, currentTime);
             playScreen.showRecordResult(currentTime);
             return;
         }

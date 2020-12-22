@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.utils.Timer;
+import com.emreozgenc.brainpractice.managers.Preference;
 import com.emreozgenc.brainpractice.managers.Sounds;
 import com.emreozgenc.brainpractice.managers.Assets;
 import com.emreozgenc.brainpractice.screens.SplashScreen;
@@ -17,21 +18,22 @@ public class BrainPractice extends Game {
     public static final int V_HEIGHT = 16;
 
     public Sounds sounds;
+    public Preference preference;
+    public AdController adController = null;
+
+    public BrainPractice() {}
+    public BrainPractice(AdController adController) {
+        this.adController = adController;
+    }
 
     @Override
     public void create() {
         Assets.load();
         Assets.manager.finishLoading();
+        preference = new Preference();
         sounds = new Sounds();
-
-        testFunc();
-        Timer.schedule(new Timer.Task() {
-            @Override
-            public void run() {
-                setScreen(new SplashScreen(BrainPractice.this));
-            }
-        }, .5f);
-
+        showSplashScreen();
+        showAd();
     }
 
     @Override
@@ -40,9 +42,22 @@ public class BrainPractice extends Game {
         Assets.dispose();
     }
 
-    private void testFunc() {
-        Preferences pref = Gdx.app.getPreferences("TimeRecord");
-        pref.putFloat("4x3-Time", 100f);
-        pref.flush();
+    private void showAd() {
+        if(adController != null)
+            Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                adController.showAd();
+            }
+        },5f);
+    }
+
+    private void showSplashScreen() {
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                setScreen(new SplashScreen(BrainPractice.this));
+            }
+        }, .5f);
     }
 }

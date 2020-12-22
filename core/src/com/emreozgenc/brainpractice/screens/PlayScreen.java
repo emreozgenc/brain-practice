@@ -20,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.emreozgenc.brainpractice.AdController;
 import com.emreozgenc.brainpractice.BrainPractice;
 import com.emreozgenc.brainpractice.Constants;
 import com.emreozgenc.brainpractice.entities.Board;
@@ -48,8 +49,6 @@ public class PlayScreen implements Screen {
 
     private void initUI() {
         final float scale = Gdx.graphics.getWidth() / 1080f;
-        final float width = Gdx.graphics.getWidth();
-        final float height = Gdx.graphics.getHeight();
         final TextureAtlas atlas = Assets.manager.get(Assets.uiskinAtlas);
 
         BitmapFont chewy_96_border = Assets.manager.get("chewy-96-border.ttf");

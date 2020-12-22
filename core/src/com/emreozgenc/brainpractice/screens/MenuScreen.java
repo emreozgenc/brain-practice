@@ -26,7 +26,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.emreozgenc.brainpractice.BrainPractice;
 import com.emreozgenc.brainpractice.Constants;
-import com.emreozgenc.brainpractice.managers.PreferencesManager;
+import com.emreozgenc.brainpractice.managers.Preference;
 import com.emreozgenc.brainpractice.managers.Sounds;
 import com.emreozgenc.brainpractice.managers.Assets;
 
@@ -118,10 +118,9 @@ public class MenuScreen implements Screen {
 
         // SCORE TABLE
 
-        Preferences scores = Gdx.app.getPreferences("TimeRecord");
-        final String record_4x3 = String.format("%.1fs", PreferencesManager.getEasyRecord());
-        final String record_4x4 = String.format("%.1fs", PreferencesManager.getMediumRecord());
-        final String record_4x5 = String.format("%.1fs", PreferencesManager.getHardRecord());
+        final String record_4x3 = String.format("%.1fs", Preference.manager.getEasyRecord());
+        final String record_4x4 = String.format("%.1fs", Preference.manager.getMediumRecord());
+        final String record_4x5 = String.format("%.1fs", Preference.manager.getHardRecord());
 
         final Table scoreTable = new Table();
         scoreTable.defaults().pad(Constants.TABLE_DEFAULT_PAD);
